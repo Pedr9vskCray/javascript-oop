@@ -21,7 +21,7 @@ while (num != -1){
     }
 }
 
-let busca = prompt("Digite a idade que você deseja buscar: ");
+let busca = Number(prompt("Digite a idade que você deseja buscar: "));
 validate(busca, "Number");
 
 for (let idade of idades){
@@ -34,5 +34,5 @@ for (let idade of idades){
 
 console.log(idades);
 console.log(`A sua turma tem: ${idades.length} pessoas.`);
-console.log(`A sua turma tem ${igual} com essa idade.`);
-console.log(`A sua turma tem ${maior} mais velhas que isso.`);
+console.log(`A sua turma tem ${igual} pessoa com essa idade.`);
+console.log(`A sua turma tem ${maior} pessoas mais velhas que isso.`);
