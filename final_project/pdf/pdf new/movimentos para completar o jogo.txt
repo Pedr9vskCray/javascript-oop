@@ -1,0 +1,22 @@
+movimentos para completar o jogo
+
+- pega martelo
+- sai Sala_de_Estar
+- pega chave_de_fenda
+- sai Lavanderia
+- usar chave_de_fenda duto_ventilacao
+- usar martelo caixa_de_plastico
+- pega chave_enferrujada
+- sai Sala_de_Estar
+- sai Meu_Quarto
+- sai Quarto_dos_meus_pais
+- usar chave_enferrujada armario
+- sai Quarto_Secreto
+- pega chave_vermelha
+- sai Quarto_dos_meus_pais
+- sai Meu_Quarto
+- sai Entrada
+- usar chave_vermelha porta_vermelha
+
+
+

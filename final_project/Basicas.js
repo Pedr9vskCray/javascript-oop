@@ -123,6 +123,8 @@ export class Sala {
 	get engine(){
 		return this.#engine;
 	}
+
+	// função para listar_objetos alterada para excluir os objetos que ainda não estão visíveis
 	
 	objetosDisponiveis(){
 		let arrObjs = [...this.#objetos.values()];
@@ -142,6 +144,8 @@ export class Sala {
     	return arrObjs.map(obj=>obj.nome+":"+obj.descricao);
 	}
 
+	// função para listar_ferramentas alterada para excluir as ferramentas que ainda não estão visíveis
+
 	ferramentasDisponiveis(){
 		let arrFer = [...this.#ferramentas.values()];
 
@@ -160,6 +164,16 @@ export class Sala {
 	
 	portasDisponiveis(){
 		let arrPortas = [...this.#portas.values()];
+		for (let element of arrPortas){
+			if (element.nome == "Quarto_Secreto"){
+				if (element.visivel == false){
+					const teste = (value) => value == element;
+					let aux = arrPortas.findIndex(teste);
+					arrPortas.splice(aux, 1);
+				}
+			}
+		}
+
     	return arrPortas.map(sala=>sala.nome);
 	}
 	
@@ -212,7 +226,6 @@ export class Engine{
 		this.#mochila = new Mochila();
 		this.#salaCorrente = null;
 		this.#fim = false;
-		this.criaCenario();
 	}
 
 	get mochila(){
@@ -265,7 +278,7 @@ export class Engine{
 					if (this.salaCorrente.usar(tokens[1],tokens[2])) {
 						console.log("Feito !!");
 						if (this.#fim == true){
-							console.log("Parabens, voce venceu!");
+							console.log("Parabens, voce venceu e conseguiu fugir da casa!");
 						}
 					} else {
 						console.log("Não é possível usar " + tokens[1] + "sobre" + tokens[2] + " nesta sala");

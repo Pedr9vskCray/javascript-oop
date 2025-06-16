@@ -1,5 +1,8 @@
 import {Ferramenta} from "./Basicas.js";
 
+// como a chave está escondida pelo mapa, ela precisa de um indicador para não ser listada
+// até que o jogador consiga revelar onde ela está escondida
+
 export class Chave_enferrujada extends Ferramenta{
 
     #visivel
@@ -24,5 +27,17 @@ export class Chave_de_fenda extends Ferramenta{
 export class Martelo extends Ferramenta{
     constructor(){
         super("martelo");
+    }
+}
+
+export class Chave_Verde extends Ferramenta{
+    constructor(){
+        super("chave_verde");
+    }
+}
+
+export class Chave_Vermelha extends Ferramenta{
+    constructor(){
+        super("chave_vermelha");
     }
 }

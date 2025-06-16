@@ -1,7 +1,7 @@
 import { validate } from "bycontract";
 import { Sala, Engine, Ferramenta, Objeto } from "./Basicas.js";
-import { Chave_enferrujada, Chave_de_fenda, Martelo } from "./Ferramentas.js";
-import { Armario, BilheteQuarto, CaixaDeMadeira, BilheteCaixa, DutoVentilacao, CaixaDePlastico } from "./Objetos.js";
+import { Chave_enferrujada, Chave_de_fenda, Martelo, Chave_Verde, Chave_Vermelha } from "./Ferramentas.js";
+import { Armario, BilheteQuarto, CaixaDeMadeira, BilheteCaixa, DutoVentilacao, CaixaDePlastico, PortaVermelha } from "./Objetos.js";
 
 export class QuartoPais extends Sala{
     constructor(engine){
@@ -21,6 +21,59 @@ export class QuartoPais extends Sala{
         }
         let armario = this.objetos.get(objeto);
         let usou = armario.usar(this.engine.mochila.pega(ferramenta));
+        if (usou == true){
+            //this.engine.indicaFimDeJogo();
+            this.engine.revelaQuarto();
+            console.log("Passagem secreta liberada!");
+        }
+        return usou
+    }
+}
+
+export class QuartoSecreto extends Sala{
+
+    #visivel;
+
+    constructor(engine){
+        validate(engine,Engine);
+        super("Quarto_Secreto", engine);
+        let chave_verde = new Chave_Verde();
+        let chave_vermelha = new Chave_Vermelha();
+        this.ferramentas.set(chave_verde.nome, chave_verde)
+        this.ferramentas.set(chave_vermelha.nome, chave_vermelha)
+        this.#visivel = false;
+    }
+
+    get visivel() { return this.#visivel }
+    set visivel(bool){
+        this.#visivel = bool;
+    }
+
+    usar(ferramenta,objeto) {
+		validate(arguments,["String","String"]);
+		return false;
+	}
+}
+
+export class Entrada extends Sala{
+    constructor(engine){
+        validate(engine, Engine);
+        super("Entrada", engine);
+        let porta_vermelha = new PortaVermelha();
+        this.objetos.set(porta_vermelha.nome, porta_vermelha);
+
+    }
+
+    usar(ferramenta,objeto){
+        validate(arguments,["String", "String"]);
+        if (!this.engine.mochila.tem(ferramenta)){
+            return false;
+        }
+        if (!this.objetos.has(objeto)){
+            return false;
+        }
+        let porta = this.objetos.get(objeto);
+        let usou = porta.usar(this.engine.mochila.pega(ferramenta));
         if (usou == true){
             this.engine.indicaFimDeJogo();
         }
@@ -64,6 +117,9 @@ export class SalaEstar extends Sala{
         if (!this.objetos.has(objeto)){
             return false;
         }
+
+        // se a caixa de madeira já tiver sido destruída, revela o bilhete alterando seu valor interno #visivel
+
         if (objeto == "caixa_de_madeira"){
             let caixaMadeira = this.objetos.get(objeto);
             let aux = caixaMadeira.usar(this.engine.mochila.pega(ferramenta));
@@ -98,6 +154,9 @@ export class Lavanderia extends Sala{
         if (!this.objetos.has(objeto)){
             return false;
         }
+
+        // exatamente a mesma coisa da caixa de madeira
+
         if (objeto == "duto_ventilacao"){
             let dutoVentilacao = this.objetos.get(objeto);
             let aux = dutoVentilacao.usar(this.engine.mochila.pega(ferramenta));

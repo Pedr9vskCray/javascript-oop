@@ -1,6 +1,6 @@
 import { validate } from "bycontract";
 import { Objeto, Ferramenta } from "./Basicas.js";
-import { Chave_enferrujada, Chave_de_fenda, Martelo } from "./Ferramentas.js";
+import { Chave_enferrujada, Chave_de_fenda, Martelo, Chave_Verde, Chave_Vermelha } from "./Ferramentas.js";
 
 export class Armario extends Objeto{
     constructor(){
@@ -15,6 +15,32 @@ export class Armario extends Objeto{
         validate(ferramenta, Ferramenta);
         if (ferramenta instanceof Chave_enferrujada){
             this.acaoOk = true;
+        }
+        return this.acaoOk;
+    }
+}
+
+// o game over está atrelado ao objeto da chave verde ao invés de ser parte da engine
+
+export class PortaVermelha extends Objeto{
+    constructor(){
+        super(
+            "porta_vermelha",
+            "Uma porta de metal pesada da cor vermelha.",
+            "A porta vermelha está aberta e você conseguiu sair da casa!"
+        )
+    }
+
+    usar(ferramenta){
+        validate(ferramenta, Ferramenta);
+        if (ferramenta instanceof Chave_Vermelha){
+            this.acaoOk = true;
+        } 
+        if (ferramenta instanceof Chave_Verde){
+            console.log("Game Over! :(")
+            console.log("Você usou a chave errada e a chave verde quebrou dentro da fechadura, agora você não consegue mais destrancar a porta.");
+            console.log("Jogo encerrado!");
+            process.exit(0);
         }
         return this.acaoOk;
     }
@@ -52,6 +78,11 @@ export class CaixaDeMadeira extends Objeto{
         return this.acaoOk;
     }
 }
+
+// como o bilhete está escondido dentro da caixa, ele precisa ser omitido da listagem de objetos
+// até o jogador encontrar uma forma de revelar o bilhete naturalmente, essa funcionalidade depende
+// do parâmetro #visivel que vai indicar se o objeto está ou não visivel ao jogador
+
 
 export class BilheteCaixa extends Objeto{
 
@@ -94,6 +125,8 @@ export class DutoVentilacao extends Objeto{
         return this.acaoOk;
     }
 }
+
+// exatamente a mesma coisa do bilhete dentro da caixa de madeira
 
 export class CaixaDePlastico extends Objeto{
 
