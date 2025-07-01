@@ -12,6 +12,7 @@ movimentos para completar o jogo
 - sai Quarto_dos_meus_pais
 - usar chave_enferrujada armario
 - sai Quarto_Secreto
+- descarta chave_enferrujada
 - pega chave_vermelha
 - sai Quarto_dos_meus_pais
 - sai Meu_Quarto

@@ -20,6 +20,7 @@ export class Ferramenta {
 }
 
 export class Mochila{
+	#capacidade = 3;
 	#ferramentas;
 
 	constructor(){
@@ -28,7 +29,14 @@ export class Mochila{
 
 	guarda(ferramenta){
 		validate(ferramenta,Ferramenta);
-		this.#ferramentas.push(ferramenta);
+		if (this.#capacidade != 0){
+			this.#ferramentas.push(ferramenta);
+			this.#capacidade -= 1;
+			return true;
+		} else {
+			console.log("Sua mochila está cheia!");
+			return false
+		}
 	}
 
 	pega(nomeFerramenta){
@@ -40,6 +48,21 @@ export class Mochila{
 	tem(nomeFerramenta){
 		validate(arguments,["String"]);
 		return this.#ferramentas.some(f => f.nome === nomeFerramenta);
+	}
+
+	descarta(nomeFerramenta){
+		validate(arguments,["String"]);
+		let aux;
+		for (let f of this.#ferramentas){
+			if (nomeFerramenta === f.nome){
+				aux = f;
+				let temp = this.#ferramentas.splice(aux, 1);
+				let arr = [true, temp];
+				this.#capacidade += 1;
+				return arr;
+			}
+		}
+		return false;
 	}
 
 	inventario(){
@@ -181,12 +204,19 @@ export class Sala {
 		validate(nomeFerramenta,"String");
 		let ferramenta = this.#ferramentas.get(nomeFerramenta);
 		if (ferramenta != null) {
-			this.#engine.mochila.guarda(ferramenta);
-			this.#ferramentas.delete(nomeFerramenta);
-			return true;
+			if(this.#engine.mochila.guarda(ferramenta)){
+				this.#ferramentas.delete(nomeFerramenta);
+				return 1;
+			}
+			return -1;
 		}else {
-			return false;
+			return 0;
 		}
+	}
+
+	addFerramentaDescartada(ferramenta) {
+		validate(ferramenta[0], Ferramenta);
+		this.#ferramentas.set(ferramenta[0].nome, ferramenta[0]);
 	}
 
 	sai(porta) {
@@ -265,9 +295,12 @@ export class Engine{
 				this.#fim = true;
 				break;
 			case "pega":
-				if (this.salaCorrente.pega(tokens[1])) {
+				let aux = this.salaCorrente.pega(tokens[1]);
+				if (aux == 1) {
 					console.log("Ok! " + tokens[1] + " guardado!");
-				} else {
+				} else if (aux == -1){
+					console.log("Mochila Cheia!");
+				} else if (aux == 0){
 					console.log("Objeto " + tokens[1] + " não encontrado.");
 				}
 				break;
@@ -283,6 +316,15 @@ export class Engine{
 					} else {
 						console.log("Não é possível usar " + tokens[1] + "sobre" + tokens[2] + " nesta sala");
 					}
+				break;
+			case "descarta":
+				let temp = this.#mochila.descarta(tokens[1]);
+				if (temp[0]){
+					console.log("Ferramenta descartada.");
+					this.#salaCorrente.addFerramentaDescartada(temp[1]);
+				} else {
+					console.log("Ferramenta não encontrada");
+				}
 				break;
 			case "sai":
 				novaSala = this.salaCorrente.sai(tokens[1]);
